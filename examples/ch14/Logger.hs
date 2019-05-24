@@ -16,6 +16,13 @@ type Log = [String]
 newtype Logger a = Logger { execLogger :: (a, Log) }
 {-- /snippet Logger --}
 
+instance Functor Logger where
+    fmap f (Logger (a, c)) = Logger ((f a, c))
+
+instance Applicative Logger where
+    pure a = Logger (a, [])
+    Logger (f, c1) <*> Logger (a, c2) = Logger ((f a, c1 ++ c2))
+
 {-- snippet return --}
 instance Monad Logger where
     return a = Logger (a, [])
